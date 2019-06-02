@@ -15,17 +15,19 @@ $ source tutorial_2_env/bin/activate
 $ source tutorial_2_env/Scripts/activate
 ```
 
-The next thing you'll need to do is to clone this repository (Use GIT CLONE or PIP INSTALL):
+The next thing you'll need to do is to clone this repository using GIT CLONE:
 ```
-$ pip install git+https://github.com/marcuselmgreen/Python_Exam_Project.git
-
-# or
 $ git clone https://github.com/marcuselmgreen/Python_Exam_Project.git
 ```
 
 To run the project you need to install the dependency - simple_colors:
 ```
 $ pip install -r requirements.txt
+```
+
+Go to the folder that you've cloned:
+```
+$ cd Python_Exam_Project
 ```
 
 Now you can run the game:
