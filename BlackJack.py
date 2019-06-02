@@ -160,10 +160,13 @@ while True:
     time.sleep(1)
     print("* Reach a final score greater than the dealer without exceeding 21 points")
     print("* Bust: the final score exceeds 21 points and the bet is lost")
-    print("* BlackJack: 21 points is achieved with the first two cards")
+    print("* BlackJack: 21 points is achieved with the first two cards. The reward for this is 1.5 times the bet made")
     print("* Push: Dealer and Player finish with the same amount of points. The bet is returned")
     print("* Hit: A new card is dealt")
     print("* Stand: A new card is not dealt")
+    print("* Double down: A new card is dealt and the bet is doubled")
+    print("* Surrender: Player surrenders and half the bet is returned")
+    print("* Insurance: When the dealer's upcard is an ace, the player is offered insurance incase the dealer gets blackjack. The insurance cuts the bet in half")
 
     #Choose between player or dealer
     player_or_dealer()
