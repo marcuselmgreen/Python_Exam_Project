@@ -12,7 +12,7 @@ $ python -m venv tutorial_2_env
 $ source tutorial_2_env/bin/activate
 
 # on windows in git bash
-$ source tutorial_2-env/Scripts/activate
+$ source tutorial_2_env/Scripts/activate
 ```
 
 The next thing you'll need to do is to clone this repository (Use GIT CLONE or PIP INSTALL):
