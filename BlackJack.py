@@ -10,14 +10,29 @@ from Chips import Chips
 #This way winnings won't be reset everytime the player wants to initiate a new game
 surrender = False
 double_down = False
-splitCount = 0
+player = False
 playing = True
 winnings = 1000
 
-def make_bet(chips):
-    #Show total amount of chips
-    print("\nYour chips: %s" % (winnings))
+def player_or_dealer():
+    global player
     while True:
+        choice = input(yellow('\nWould you like to play as a player or dealer?\n1. Player\n2. Dealer\n'))
+        if choice == '1':
+            player = True
+        elif choice == '2':
+            pass
+        else:
+            print(red('Wrong input. Try again!\n\n'))
+            continue
+        break
+
+def make_bet(chips):
+    global player
+    #Only make bet if playing as player
+    while player == True:
+        #Show total amount of chips
+        print("\nYour chips: %s" % (winnings))
         #User makes bet input
         bet = input(yellow('\nWhat is your bet? '))
         #Checking if input is a number and don't exceed the amount of chips available
@@ -52,7 +67,7 @@ def hit_or_stand(deck, hand, chips):
         #Double down
         elif choice == '3':
             #Checking if the player has enough available chips to double down
-            if chips.bet * 2 < winnings:
+            if chips.bet * 2 <= winnings:
                 print("\n\nPlayer is doubling down. Increasing the bet...")
                 hit(deck, hand)
                 double_down = True
@@ -149,17 +164,18 @@ while True:
     print("* Push: Dealer and Player finish with the same amount of points. The bet is returned")
     print("* Hit: A new card is dealt")
     print("* Stand: A new card is not dealt")
-    
+
+    #Choose between player or dealer
+    player_or_dealer()
+
     #Setup deck
     deck = Deck()
     deck.shuffle()
 
     #Deal the first two player cards
     player_hand = Hand()
-    player_hand.add_card(Card('Diamonds', 'Eight'))
-    player_hand.add_card(Card('Hearts', 'Eight'))
-    #player_hand.add_card(deck.deal())
-    #player_hand.add_card(deck.deal())
+    player_hand.add_card(deck.deal())
+    player_hand.add_card(deck.deal())
 
     #Deal the first two dealer cards
     dealer_hand = Hand()
@@ -179,26 +195,10 @@ while True:
     #If the dealer's upcard is an ace, the player is given an option to receive insurance
     #This way if the dealer has a BlackJack, the bet is halved
     if dealer_hand.cards[1].rank == "Ace":
-        while True:
+        while player == True:
             choice = input(yellow("\nThe dealer's upcard is an ace, would you like insurance in case the dealer gets a blackjack?\n1. Yes\n2. No\n"))
             if choice == '1':
-                player_chips.bet += (player_chips.bet / 2)
-            elif choice == '2':
-                pass
-            else:
-                print(red('Wrong input. Try again!\n\n'))
-                continue
-            break
-
-    if player_hand.cards[0].rank == player_hand.cards[1].rank:
-        while True:
-            choice = input(yellow("\nThe first two cards you were dealt is the same value. Would you like to split them?\n1. Yes\n2. No\n"))
-            if choice == '1':
-                player_chips.bet += (player_chips.bet * 2)
-                splitCount += 1
-                #Make new hand
-                #player_hand = Hand()
-                #Add cards to each hand
+                player_chips.bet -= (player_chips.bet / 2)
             elif choice == '2':
                 pass
             else:
@@ -226,7 +226,15 @@ while True:
                 pass
 
         #Player options
-        hit_or_stand(deck, player_hand, player_chips)
+        if player == True:
+            hit_or_stand(deck, player_hand, player_chips)
+        else:
+            if player_hand.value < 17:
+                hit(deck, player_hand)
+                print(yellow("\nPlayer hits"))
+            else:
+                print(yellow("\nPlayer is standing"))
+                break
 
         #Player busts if getting over 21 points when doubling down
         if player_hand.value > 21:
@@ -289,6 +297,7 @@ while True:
             push(player_hand, dealer_hand)
 
     time.sleep(1)
+
     #Player chips is increased if doubling down
     if double_down == True:
         player_chips.total *= 2
@@ -300,8 +309,14 @@ while True:
     #Total amount of winning is increased
     winnings += player_chips.total
 
-    print('\nWinnings: ', player_chips.total)
+    #Only display player chips if player
+    if player == True:
+        print('\nWinnings: ', player_chips.total)
+    else:
+        pass
+
     time.sleep(1)
+
     #Game has ended and player is given some options
     #Player can't restart the game if theres no available chips
     restart = input("\nDo you want to:\n1. Continue playing\n2. Cash Out\n")
@@ -310,12 +325,17 @@ while True:
             playing = True
             double_down = False
             surrender = False
-            splitCount = 0
+            player = False
+            dealer = False
             continue
         elif winnings == 0:
             print("\nYou don't have enough chips, restart the game if you want to play again...")
             break
     else:
-        print("\nYou got a total of %s chips" % winnings)
+        #Only display winnings if player
+        if player == True:
+            print("\nYou got a total of %s chips" % winnings)
+        else:
+            pass
         print("\nThanks for playing")
         break
